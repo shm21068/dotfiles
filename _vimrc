@@ -1,13 +1,21 @@
 set nocompatible               " be iMproved
 filetype off
 
-
+""""""""""""""""""""""""""""""
+" プラグインのセットアップ
+"""""""""""""""""""""""""""""""
 if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim
-  call neobundle#rc(expand('~/.vim/bundle/'))
+  set nocompatible               " Be iMproved
+
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+
 endif
 
-" Let NeoBundle manage NeoBundle
+  " Required:
+  call neobundle#begin(expand('~/.vim/bundle/'))
+
+ "Let NeoBundle manage NeoBundle
  "Required:
  NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -30,9 +38,13 @@ endif
  " シングルクオートとダブルクオートの入れ替え等
  NeoBundle 'tpope/vim-surround'
 
- " インデントに色を付けて見やすくする
+ "インデントに色を付けて見やすくする
  NeoBundle 'nathanaelkane/vim-indent-guides'
- " ログファイルを色づけしてくれる
+
+ " vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
+ let g:indent_guides_enable_on_vim_startup = 1
+
+  " ログファイルを色づけしてくれる
  NeoBundle 'vim-scripts/AnsiEsc.vim'
  " 行末の半角スペースを可視化(うまく動かない？)
  NeoBundle 'bronson/vim-trailing-whitespace'
@@ -147,14 +159,20 @@ NeoBundleCheck
  noremap <C-Z> :Unite file_mru<CR>
  " sourcesを「今開いているファイルのディレクトリ」とする
  noremap :uff :<C-u>UniteWithBufferDir file -buffer-name=file<CR>
+ " NERDTreeを開く
+ nnoremap <silent><C-t> :NERDTree<CR>
+ " 隠しファイルをデフォルトで表示させる
+ let NERDTreeShowHidden = 1
+ " デフォルトでツリーを表示させる
+ autocmd VimEnter * execute 'NERDTree'
 
  " ウィンドウを分割して開く
- au FileType unite nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
- au FileType unite inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
+ au FileType unite nnoremap <silent> <buffer> <expr> <C-s> unite#do_action('split')
+ au FileType unite inoremap <silent> <buffer> <expr> <C-s> unite#do_action('split')
 
  " ウィンドウを縦に分割して開く
- au FileType unite nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
- au FileType unite inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
+ au FileType unite nnoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
+ au FileType unite inoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
 
 
  " ESCキーを2回押すと終了する
@@ -234,7 +252,54 @@ endif
  imap { {}<LEFT>
  imap [ []<LEFT>
  imap ( ()<LEFT>
+ imap < <><LEFT>
 """"""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""
+ " PHP用設定
+""""""""""""""""""""""""""""""
+
+ " PHP辞書ファイル指定
+ autocmd FileType php,ctp :set dictionary=~/.vim/dict/php.dict
+ " :makeでPHP構文チェック
+ au FileType php setlocal makeprg=php\ -l\ %
+ au FileType php setlocal errorformat=%m\ in\ %f\ on\ line\ %l
+ " PHPの関数やクラスの折りたたみ
+ let php_folding = 0
+ " 文字列の中のSQLをハイライト
+ let php_sql_query = 1
+ " Baselibメソッドのハイライト
+ let php_baselib = 1
+ " HTMLもハイライト
+ let php_htmlInStrings = 1
+ " <? を無効にする→ハイライト除外にする
+ let php_noShortTags = 1
+ " ] や ) の対応エラーをハイライト
+ let php_parent_error_close = 1
+ let php_parent_error_open = 1
+ " SQLのPHP文字リテラルへの整形(:Sqltop, :Sqlfromp)
+ function! SQLToPHP()
+ %s/^\(.\+\)$/"\1 " \./g
+
+  normal G$
+  execute "normal ?.&lt;CR&gt;"
+  normal xxggVG
+  echo "Convert to PHP String is finished."
+  endfunction
+  command! Sqltop :call SQLToPHP()
+  function! SQLFromPHP()
+  %s/^"\(.\+\) " *\.*$/\1/g
+
+   normal ggVG
+   echo "Convert from PHP String is finished."
+   endfunction
+   command! Sqlfromp :call SQLFromPHP()
+   " ハイライト色設定
+   highlight Pmenu ctermbg=4
+   highlight PmenuSel ctermbg=1
+   highlight PMenuSbar ctermbg=4
+""""""""""""""""""""""""""""""
+
 
 " filetypeの自動検出(最後の方に書いた方がいいらしい)
 filetype on
