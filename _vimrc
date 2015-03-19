@@ -1,6 +1,14 @@
 set nocompatible               " be iMproved
 filetype off
 
+"GO言語の設定
+filetype plugin indent off
+set runtimepath+=$GOROOT/misc/vim
+
+filetype plugin indent on
+
+
+
 """"""""""""""""""""""""""""""
 " プラグインのセットアップ
 """""""""""""""""""""""""""""""
@@ -53,12 +61,18 @@ endif
 
  NeoBundle 'vim-scripts/Wombat'
 
- " 余談: neocompleteは合わなかった。ctrl+pで補完するのが便利
+ NeoBundle 'mattn/emmet-vim'
+
+ NeoBundle 'scrooloose/syntastic.git'
+ NeoBundle 'fatih/vim-go'
+
+let bundle = neobundle#get('vim-go')
+
+" 余談: neocompleteは合わなかった。ctrl+pで補完するのが便利
 
  call neobundle#end()
 
-filetype indent on
-NeoBundleCheck
+ NeoBundleCheck
 
 """"""""""""""""""""""""""""""
 " 各種オプションの設定
@@ -130,12 +144,15 @@ NeoBundleCheck
  set sidescrolloff=16           " 左右スクロール時の視界を確保
  set sidescroll=1               " 左右スクロールは一文字づつ行う
 
+ set clipboard=unnamed " クリップボードを使用する
+ set backspace=indent,eol,start " Backspaceで削除を可能にする
  " 構文毎に文字色を変化させる
  syntax on
  " カラースキーマの指定
  colorscheme wombat
  " 行番号の色
  highlight LineNr ctermfg=darkyellow
+
  """"""""""""""""""""""""""""""
 
  " vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
@@ -299,7 +316,21 @@ endif
    highlight PmenuSel ctermbg=1
    highlight PMenuSbar ctermbg=4
 """"""""""""""""""""""""""""""
+" MEMO:$GOPATHがなければ手動でパス指定
+if $GOPATH != ''
+  " golintの実行パスを追加
+  execute "set rtp+=".globpath($GOPATH, "src/github.com/golang/lint/misc/vim")
+  " syntastic設定
+  let g:syntastic_go_checkers = ['go', 'golint', 'govet']
+endif
+
+" 保存時に自動で:Fmtをかける(syntastic関係ない)
+augroup Go
+  autocmd!
+  autocmd BufWritePre *.go Fmt
+augroup END
 
 
 " filetypeの自動検出(最後の方に書いた方がいいらしい)
 filetype on
+filetype plugin on
