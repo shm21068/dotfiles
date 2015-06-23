@@ -12,6 +12,7 @@ filetype plugin indent on
 """"""""""""""""""""""""""""""
 " プラグインのセットアップ
 """""""""""""""""""""""""""""""
+
 if has('vim_starting')
   set nocompatible               " Be iMproved
 
@@ -63,8 +64,10 @@ endif
 
  NeoBundle 'mattn/emmet-vim'
 
- NeoBundle 'scrooloose/syntastic.git'
+ NeoBundle 'scrooloose/syntastic'
  NeoBundle 'fatih/vim-go'
+ NeoBundle 'hail2u/vim-css3-syntax'
+ NeoBundle 'pangloss/vim-javascript'
 
 let bundle = neobundle#get('vim-go')
 
@@ -94,9 +97,7 @@ let bundle = neobundle#get('vim-go')
  " ステータス行に現在のgitブランチを表示する
  set statusline+=%{fugitive#statusline()}
  " ウインドウのタイトルバーにファイルのパス情報等を表示する
- set title
- " コマンドラインモードで<Tab>キーによるファイル名補完を有効にする
- set wildmenu
+ set wildmenu wildmode=list:full
  " 入力中のコマンドを表示する
  set showcmd
  " バックアップディレクトリの指定(でもバックアップは使ってない)
@@ -146,8 +147,10 @@ let bundle = neobundle#get('vim-go')
 
  set clipboard=unnamed " クリップボードを使用する
  set backspace=indent,eol,start " Backspaceで削除を可能にする
+ set autoread "外部でファイルに変更がされた場合は読みなおす
+
  " 構文毎に文字色を変化させる
- syntax on
+ syntax enable
  " カラースキーマの指定
  colorscheme wombat
  " 行番号の色
@@ -273,7 +276,22 @@ endif
 """"""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""
- " PHP用設定
+ " javascript
+""""""""""""""""""""""""""""""
+
+execute pathogen#infect()
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+"""""""""""""""""""""""""""""
+ " "PHP用設定
 """"""""""""""""""""""""""""""
 
  " PHP辞書ファイル指定
@@ -290,7 +308,7 @@ endif
  " HTMLもハイライト
  let php_htmlInStrings = 1
  " <? を無効にする→ハイライト除外にする
- let php_noShortTags = 1
+"  let php_noShortTags = 1
  " ] や ) の対応エラーをハイライト
  let php_parent_error_close = 1
  let php_parent_error_open = 1
@@ -330,7 +348,12 @@ augroup Go
   autocmd BufWritePre *.go Fmt
 augroup END
 
+if filereadable(expand('~/.vim/neobundle.vim/syntax/jquery.vim'))
+  source ~/.vim/neobundle.vim/syntax/jquery.vim
+endif
+
 
 " filetypeの自動検出(最後の方に書いた方がいいらしい)
 filetype on
 filetype plugin on
+
