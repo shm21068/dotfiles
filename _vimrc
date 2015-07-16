@@ -184,7 +184,7 @@ let bundle = neobundle#get('vim-go')
  " 隠しファイルをデフォルトで表示させる
  let NERDTreeShowHidden = 1
  " デフォルトでツリーを表示させる
- autocmd VimEnter * execute 'NERDTree'
+"  autocmd VimEnter * execute 'NERDTree'
 
  " ウィンドウを分割して開く
  au FileType unite nnoremap <silent> <buffer> <expr> <C-s> unite#do_action('split')
