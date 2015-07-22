@@ -279,7 +279,7 @@ endif
  " javascript
 """"""""""""""""""""""""""""""
 
-execute pathogen#infect()
+" execute pathogen#infect()
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
