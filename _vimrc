@@ -30,6 +30,8 @@ endif
 
  " ファイルオープンを便利に
  NeoBundle 'Shougo/unite.vim'
+ " sudoでファイルオープン
+ NeoBundle 'sudo.vim'
  " Unite.vimで最近使ったファイルを表示できるようにする
  NeoBundle 'Shougo/neomru.vim'
  " ファイルをtree表示してくれる
