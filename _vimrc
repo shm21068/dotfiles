@@ -72,6 +72,24 @@ endif
  NeoBundle 'pangloss/vim-javascript'
  NeoBundle 'kchmck/vim-coffee-script'
 
+ " markdown用のバンドル
+ NeoBundle 'plasticboy/vim-markdown'
+ NeoBundle 'kannokanno/previm'
+ NeoBundle 'tyru/open-browser.vim'
+
+""""""""""""""""""""""""""""""
+ " "markdown用設定
+""""""""""""""""""""""""""""""
+
+au BufRead,BufNewFile *.md set filetype=markdown
+let g:previm_open_cmd = 'open -a Firefox'
+ noremap <C-M> :PrevimOpen<CR>
+
+
+""""""""""""""""""""""""""""""
+ " "coffee用設定
+""""""""""""""""""""""""""""""
+
 " vimにcoffeeファイルタイプを認識させる
 
 au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
@@ -79,11 +97,14 @@ au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
 autocmd FileType coffee    setlocal sw=2 sts=2 ts=2 et
 " オートコンパイル
   "保存と同時にコンパイルする
-autocmd BufWritePost *.coffee silent make! 
+autocmd BufWritePost *.coffee silent make!
   "エラーがあったら別ウィンドウで表示
-autocmd QuickFixCmdPost * nested cwindow | redraw! 
+autocmd QuickFixCmdPost * nested cwindow | redraw!
+
 " Ctrl-cで右ウィンドウにコンパイル結果を一時表示する
 nnoremap <silent> <C-C> :CoffeeCompile vert <CR><C-w>h
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 let bundle = neobundle#get('vim-go')
@@ -182,6 +203,7 @@ let bundle = neobundle#get('vim-go')
  autocmd QuickFixCmdPost *grep* cwindow
 
  " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
+ "
 
  """"""""""""""""""""""""""""""
  " Unit.vimの設定
@@ -215,6 +237,7 @@ let bundle = neobundle#get('vim-go')
  " ESCキーを2回押すと終了する
  au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
  au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
+
  """"""""""""""""""""""""""""""
 
  " http://inari.hatenablog.com/entry/2014/05/05/231307
@@ -350,7 +373,9 @@ let g:syntastic_check_on_wq = 0
    highlight Pmenu ctermbg=4
    highlight PmenuSel ctermbg=1
    highlight PMenuSbar ctermbg=4
+
 """"""""""""""""""""""""""""""
+
 " MEMO:$GOPATHがなければ手動でパス指定
 if $GOPATH != ''
   " golintの実行パスを追加
