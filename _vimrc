@@ -150,7 +150,7 @@ let bundle = neobundle#get('vim-go')
  " 暗い背景色に合わせた配色にする
  set background=dark
  " タブ入力を複数の空白入力に置き換える
- set expandtab
+"  set expandtab
  " 検索ワードの最初の文字を入力した時点で検索を開始する
  set incsearch
  " 保存されていないファイルがあるときでも別のファイルを開けるようにする
@@ -158,7 +158,7 @@ let bundle = neobundle#get('vim-go')
  " 不可視文字を表示する
  set list
  " タブと行の続きを可視化する
- set listchars=tab:>\ ,extends:<,trail:-,eol:↲,precedes:«,nbsp:%
+ set listchars=tab:>-,trail:-,extends:<,nbsp:%
  " 行番号を表示する
  set number
 
@@ -394,6 +394,11 @@ if filereadable(expand('~/.vim/neobundle.vim/syntax/jquery.vim'))
   source ~/.vim/neobundle.vim/syntax/jquery.vim
 endif
 
+" vimdiffの色設定
+highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=22
+highlight DiffDelete cterm=bold ctermfg=10 ctermbg=52
+highlight DiffChange cterm=bold ctermfg=10 ctermbg=17
+highlight DiffText   cterm=bold ctermfg=10 ctermbg=21
 
 " filetypeの自動検出(最後の方に書いた方がいいらしい)
 filetype on
