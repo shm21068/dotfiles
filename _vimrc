@@ -1,28 +1,18 @@
 set nocompatible               " be iMproved
+
 filetype off
-
-"GO言語の設定
-filetype plugin indent off
-set runtimepath+=$GOROOT/misc/vim
-
 filetype plugin indent on
-
-
 
 """"""""""""""""""""""""""""""
 " プラグインのセットアップ
 """""""""""""""""""""""""""""""
-
 if has('vim_starting')
   set nocompatible               " Be iMproved
-
   " Required:
   set runtimepath+=~/.vim/bundle/neobundle.vim/
-
 endif
 
-  " Required:
-  call neobundle#begin(expand('~/.vim/bundle/'))
+call neobundle#begin(expand('~/.vim/bundle/'))
 
  "Let NeoBundle manage NeoBundle
  "Required:
@@ -39,11 +29,6 @@ endif
  " Gitを便利に使う
  NeoBundle 'tpope/vim-fugitive'
 
- " Rails向けのコマンドを提供する
- NeoBundle 'tpope/vim-rails'
- " Ruby向けにendを自動挿入してくれる
- NeoBundle 'tpope/vim-endwise'
-
  " コメントON/OFFを手軽に実行
  NeoBundle 'tomtom/tcomment_vim'
  " シングルクオートとダブルクオートの入れ替え等
@@ -52,9 +37,6 @@ endif
  "インデントに色を付けて見やすくする
  NeoBundle 'nathanaelkane/vim-indent-guides'
 
- " vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
- let g:indent_guides_enable_on_vim_startup = 1
-
   " ログファイルを色づけしてくれる
  NeoBundle 'vim-scripts/AnsiEsc.vim'
  " 行末の半角スペースを可視化(うまく動かない？)
@@ -62,57 +44,31 @@ endif
  " less用のsyntaxハイライト
  NeoBundle 'KohPoll/vim-less'
 
- NeoBundle 'vim-scripts/Wombat'
+ NeoBundle 'scrooloose/syntastic'
+ NeoBundle 'hail2u/vim-css3-syntax'
 
+ NeoBundle 'vim-scripts/Wombat'
  NeoBundle 'mattn/emmet-vim'
 
- NeoBundle 'scrooloose/syntastic'
  NeoBundle 'fatih/vim-go'
- NeoBundle 'hail2u/vim-css3-syntax'
  NeoBundle 'pangloss/vim-javascript'
  NeoBundle 'kchmck/vim-coffee-script'
+ NeoBundle 'violetyk/cake.vim'
+
+ " Tagbarのプラグイン"
+ NeoBundle 'majutsushi/tagbar.git'
 
  " markdown用のバンドル
  NeoBundle 'plasticboy/vim-markdown'
  NeoBundle 'kannokanno/previm'
  NeoBundle 'tyru/open-browser.vim'
 
-""""""""""""""""""""""""""""""
- " "markdown用設定
-""""""""""""""""""""""""""""""
+ " Tagにジャンプする
+ NeoBundle 'szw/vim-tags'
 
-au BufRead,BufNewFile *.md set filetype=markdown
-let g:previm_open_cmd = 'open -a Firefox'
- noremap <C-M> :PrevimOpen<CR>
-
-
-""""""""""""""""""""""""""""""
- " "coffee用設定
-""""""""""""""""""""""""""""""
-
-" vimにcoffeeファイルタイプを認識させる
-
-au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
-" インデント設定
-autocmd FileType coffee    setlocal sw=2 sts=2 ts=2 et
-" オートコンパイル
-  "保存と同時にコンパイルする
-autocmd BufWritePost *.coffee silent make!
-  "エラーがあったら別ウィンドウで表示
-autocmd QuickFixCmdPost * nested cwindow | redraw!
-
-" Ctrl-cで右ウィンドウにコンパイル結果を一時表示する
-nnoremap <silent> <C-C> :CoffeeCompile vert <CR><C-w>h
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-
-let bundle = neobundle#get('vim-go')
+call neobundle#end()
 
 " 余談: neocompleteは合わなかった。ctrl+pで補完するのが便利
-
- call neobundle#end()
-
  NeoBundleCheck
 
 """"""""""""""""""""""""""""""
@@ -141,8 +97,6 @@ let bundle = neobundle#get('vim-go')
  " バックアップディレクトリの指定(でもバックアップは使ってない)
  set backupdir=$HOME/.vimbackup
 
- "バッファで開いているファイルのディレクトリでエクスクローラを開始する(でもエクスプローラって使ってない)
- set browsedir=buffer
  " 小文字のみで検索したときに大文字小文字を無視する
  set smartcase
  " 検索結果をハイライト表示する
@@ -177,7 +131,8 @@ let bundle = neobundle#get('vim-go')
  " カーソルを行頭、行末で止まらないようにする
  set whichwrap=b,s,h,l,<,>,[,]
 
- set cursorline     " カーソル行の背景色を変える
+ " カーソル行の背景色を変える
+ set cursorline
 
  set scrolloff=8                " 上下8行の視界を確保
  set sidescrolloff=16           " 左右スクロール時の視界を確保
@@ -187,14 +142,27 @@ let bundle = neobundle#get('vim-go')
  set backspace=indent,eol,start " Backspaceで削除を可能にする
  set autoread "外部でファイルに変更がされた場合は読みなおす
 
+ set fencs=iso-2022-jp,sjis,euc-jp
+ set encoding=utf-8
+ set fileencodings=utf-8,euc-jp,sjis,
+ set fileformats=unix,dos,mac
+
+ set rtp+=$GOROOT/misc/vim
+ set completeopt=menu,preview
  " 構文毎に文字色を変化させる
  syntax enable
+ syntax on
  " カラースキーマの指定
  colorscheme wombat
  " 行番号の色
  highlight LineNr ctermfg=darkyellow
 
  """"""""""""""""""""""""""""""
+
+" この設定入れるとshiftwidthを1にしてインデントしてくれる
+ let g:SimpleJsIndenter_BriefMode = 1
+" この設定入れるとswitchのインデントがいくらかマシに
+ let g:SimpleJsIndenter_CaseIndentLevel = -1
 
  " vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
  let g:indent_guides_enable_on_vim_startup = 1
@@ -204,6 +172,12 @@ let bundle = neobundle#get('vim-go')
 
  " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
  "
+
+ """"""""""""""""""""""""""""""
+ " vim-tagsの設定
+ """"""""""""""""""""""""""""""
+  map <C-h> :vsp <CR> :exec("tag ".expand("<cword>"))<CR>
+  map <C-k> :split <CR> :exec("tag ".expand("<cword>"))<CR>
 
  """"""""""""""""""""""""""""""
  " Unit.vimの設定
@@ -225,6 +199,8 @@ let bundle = neobundle#get('vim-go')
  " デフォルトでツリーを表示させる
 "  autocmd VimEnter * execute 'NERDTree'
 
+ autocmd VimEnter * execute 'TagbarOpen'
+
  " ウィンドウを分割して開く
  au FileType unite nnoremap <silent> <buffer> <expr> <C-s> unite#do_action('split')
  au FileType unite inoremap <silent> <buffer> <expr> <C-s> unite#do_action('split')
@@ -233,16 +209,15 @@ let bundle = neobundle#get('vim-go')
  au FileType unite nnoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
  au FileType unite inoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
 
-
  " ESCキーを2回押すと終了する
  au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
  au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 
- """"""""""""""""""""""""""""""
 
+
+ """"""""""""""""""""""""""""""
  " http://inari.hatenablog.com/entry/2014/05/05/231307
  """""""""""""""""""""""""""""" " 全角スペースの表示
- """"""""""""""""""""""""""""""
  function! ZenkakuSpace()
    highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
    endfunction
@@ -257,7 +232,6 @@ let bundle = neobundle#get('vim-go')
  endif
 
 """"""""""""""""""""""""""""""
-
 " https://sites.google.com/site/fudist/Home/vim-nihongo-ban/-vimrc-sample
  """"""""""""""""""""""""""""""
 " 挿入モード時、ステータスラインの色を変更
@@ -295,6 +269,11 @@ endfunction
 
 """"""""""""""""""""""""""""""
 
+" tagbar の設定
+let g:tagbar_left = 0
+let g:tagbar_autoshowtag = 1   " :TagbarShowTag を叩かなくても有効にする
+" let g:tagbar_autofocus = 1
+
 """"""""""""""""""""""""""""""
 " 最後のカーソル位置を復元する
 """"""""""""""""""""""""""""""
@@ -316,10 +295,71 @@ endif
 """"""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""
- " javascript
+" cakephp用設定
+""""""""""""""""""""""""""""""
+let g:cakephp_enable_auto_mode = 1
+nnoremap <Space>cc :Ccontrollervsp
+nnoremap <Space>cm :Cmodelvsp
+nnoremap <Space>cv :Cviewvsp
 """"""""""""""""""""""""""""""
 
-" execute pathogen#infect()
+" markdown用設定
+""""""""""""""""""""""""""""""
+au BufRead,BufNewFile *.md set filetype=markdown
+let g:previm_open_cmd = 'open -a Firefox'
+noremap <C-M> :PrevimOpen<CR>
+
+""""""""""""""""""""""""""""""
+" coffee用設定
+""""""""""""""""""""""""""""""
+ " vimにcoffeeファイルタイプを認識させる
+ au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
+ " インデント設定
+ autocmd FileType coffee    setlocal sw=2 sts=2 ts=2 et
+ " オートコンパイル
+ "保存と同時にコンパイルする
+ autocmd BufWritePost *.coffee silent make!
+ "エラーがあったら別ウィンドウで表示
+ autocmd QuickFixCmdPost * nested cwindow | redraw!
+ " Ctrl-cで右ウィンドウにコンパイル結果を一時表示する
+ nnoremap <silent> <C-C> :CoffeeCompile vert <CR><C-w>h
+
+""""""""""""""""""""""""""""""
+" go用設定
+""""""""""""""""""""""""""""""
+
+let g:syntastic_mode_map = { 'mode': 'passive',
+    \ 'active_filetypes': ['go'] }
+let g:syntastic_go_checkers = ['go', 'golint']
+
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+
+"" GoFmt時にインポートするパッケージを整理
+let g:go_fmt_command = "goimports"
+
+autocmd FileType go :highlight goErr cterm=bold ctermfg=214
+autocmd FileType go :match goErr /\<err\>/
+autocmd FileType go setlocal noexpandtab
+au FileType go nmap gt (go-test)
+
+" MEMO:$GOPATHがなければ手動でパス指定
+if $GOPATH != ''
+  " golintの実行パスを追加
+  execute "set rtp+=".globpath($GOPATH, "src/github.com/golang/lint/misc/vim")
+endif
+
+" 保存時に自動で:Fmtをかける(syntastic関係ない)
+" augroup Go
+"   autocmd GoFmt
+" augroup END
+
+""""""""""""""""""""""""""""""
+ " javascript
+""""""""""""""""""""""""""""""
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -375,20 +415,6 @@ let g:syntastic_check_on_wq = 0
    highlight PMenuSbar ctermbg=4
 
 """"""""""""""""""""""""""""""
-
-" MEMO:$GOPATHがなければ手動でパス指定
-if $GOPATH != ''
-  " golintの実行パスを追加
-  execute "set rtp+=".globpath($GOPATH, "src/github.com/golang/lint/misc/vim")
-  " syntastic設定
-  let g:syntastic_go_checkers = ['go', 'golint', 'govet']
-endif
-
-" 保存時に自動で:Fmtをかける(syntastic関係ない)
-augroup Go
-  autocmd!
-  autocmd BufWritePre *.go Fmt
-augroup END
 
 if filereadable(expand('~/.vim/neobundle.vim/syntax/jquery.vim'))
   source ~/.vim/neobundle.vim/syntax/jquery.vim
